@@ -18,8 +18,14 @@ play = show play button in middle
 
 Usage:
 http://example.com/yt-thumb.php?quality=hq&inpt=http://www.youtube.com/watch?v=XZ4X1wcZ1GE
+
 http://example.com/yt-thumb.php?quality=mq&inpt=http://www.youtube.com/watch?v=XZ4X1wcZ1GE
+
 http://example.com/yt-thumb.php?quality=hq&inpt=XZ4X1wcZ1GE
+
 http://example.com/yt-thumb.php?quality=mq&inpt=XZ4X1wcZ1GE
+
 http://example.com/yt-thumb.php?quality=hq&inpt=XZ4X1wcZ1GE&play
+
 http://example.com/yt-thumb.php?quality=hq&inpt=XZ4X1wcZ1GE&play&refresh
+
