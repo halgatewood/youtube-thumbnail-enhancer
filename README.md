@@ -17,7 +17,7 @@ Setup:
 Dependances:
 *   curl
 *   GD Library
-*   coffee
+*   coffee (the beverage)
 
 Parameters:
 *   inpt = YouTube URL or YouTube ID
