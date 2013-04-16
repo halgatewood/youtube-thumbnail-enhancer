@@ -5,6 +5,12 @@ Easily create youtube thumbnails with play buttons watermarked on the top.
 
 License: The just-use-it license. Have fun!
 
+Setup:
+1. Add this script to your server
+1. Create folder named 'i (this is where the youtube videos are stored)
+
+
+
 Dependances:
 curl
 GD Library
