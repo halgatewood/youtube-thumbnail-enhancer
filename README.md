@@ -3,6 +3,10 @@ YouTube Thumbnail Enchancer
 
 Easily create youtube thumbnails with play buttons watermarked on the top.
 
+
+Demo: http://halgatewood.com/youtube/
+
+
 License: The just-use-it license. Have fun!
 
 Setup:
