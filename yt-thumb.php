@@ -78,7 +78,7 @@ if($httpCode == 404 OR !$response)
 curl_close($handle);
 
 
-// IF NOT ID GO THROUGH AN ERROR
+// IF NOT ID THROW AN ERROR
 if(!$id) 
 {
 	header("Status: 404 Not Found");
