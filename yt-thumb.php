@@ -62,7 +62,7 @@ if(!$is_url) { $id = $inpt; }
 
 
 // CHECK IF YOUTUBE VIDEO
-$handle = curl_init("http://www.youtube.com/watch/?v=" . $id);
+$handle = curl_init("https://www.youtube.com/watch/?v=" . $id);
 curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
 $response = curl_exec($handle);
 
