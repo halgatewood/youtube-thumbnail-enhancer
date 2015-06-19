@@ -61,6 +61,19 @@ if(substr($inpt, 0, 7) == "http://" OR substr($inpt, 0, 8) == "https://")
 if(!$is_url) { $id = $inpt; }
 
 
+// FILENAME
+$filename = ($quality == "mq") ? $id . "-mq": $id;
+$filename .= $play_btn_file_name;
+
+
+// IF EXISTS, GO
+if(file_exists("i/" . $filename . ".jpg") AND !isset($_GET['refresh']))
+{
+	header("Location: i/" . $filename . ".jpg");
+	die;
+}
+
+
 // CHECK IF YOUTUBE VIDEO
 $handle = curl_init("https://www.youtube.com/watch/?v=" . $id);
 curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
@@ -83,18 +96,6 @@ if(!$id)
 {
 	header("Status: 404 Not Found");
 	die("YouTube ID not found");
-}
-
-// FILENAME
-$filename = ($quality == "mq") ? $id . "-mq": $id;
-$filename .= $play_btn_file_name;
-
-
-// IF EXISTS, GO
-if(file_exists("i/" . $filename . ".jpg") AND !isset($_GET['refresh']))
-{
-	header("Location: i/" . $filename . ".jpg");
-	die;
 }
 
 
