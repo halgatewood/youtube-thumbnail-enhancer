@@ -25,17 +25,17 @@ class YoutubeThumbnailerTest extends \PHPUnit_Framework_TestCase
     public function testCustomRequestParams()
     {
         $params = [
-            'quality' => 'hq',
+            'quality' => YoutubeThumbnailer::HIGH_QUALITY,
             'inpt' => 'http://www.youtube.com/watch?v=XZ4X1wcZ1GE',
             'play' => '',
             'refresh' => ''
         ];
         $this->youtubeThumbnailer->setRequestParams($params);
 
-        $this->assertEquals('hq', $this->youtubeThumbnailer->getQuality());
+        $this->assertEquals(YoutubeThumbnailer::HIGH_QUALITY, $this->youtubeThumbnailer->getQuality());
         $this->assertEquals('http://www.youtube.com/watch?v=XZ4X1wcZ1GE', $this->youtubeThumbnailer->getInput());
-        $this->assertTrue($this->youtubeThumbnailer->getPlay());
-        $this->assertTrue($this->youtubeThumbnailer->getRefresh());
+        $this->assertEquals(YoutubeThumbnailer::SHOW_PLAY, $this->youtubeThumbnailer->getPlay());
+        $this->assertEquals(YoutubeThumbnailer::APPLY_REFRESH, $this->youtubeThumbnailer->getRefresh());
     }
 
     public function testDefaultRequestParams()
@@ -45,10 +45,10 @@ class YoutubeThumbnailerTest extends \PHPUnit_Framework_TestCase
         ];
         $this->youtubeThumbnailer->setRequestParams($params);
 
-        $this->assertEquals('mq', $this->youtubeThumbnailer->getQuality());
+        $this->assertEquals(YoutubeThumbnailer::DEFAULT_QUALITY, $this->youtubeThumbnailer->getQuality());
         $this->assertEquals('http://www.youtube.com/watch?v=XZ4X1wcZ1GE', $this->youtubeThumbnailer->getInput());
-        $this->assertFalse($this->youtubeThumbnailer->getPlay());
-        $this->assertFalse($this->youtubeThumbnailer->getRefresh());
+        $this->assertEquals(YoutubeThumbnailer::DEFAULT_SHOW_PLAY, $this->youtubeThumbnailer->getPlay());
+        $this->assertEquals(YoutubeThumbnailer::DEFAULT_APPLY_REFRESH, $this->youtubeThumbnailer->getRefresh());
     }
 
     public function testGetYoutubeIdFromInput()

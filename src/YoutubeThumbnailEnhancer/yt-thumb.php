@@ -32,7 +32,7 @@ if(!$isUrl) { $id = $inpt; }
 
 
 // FILENAME
-$filename = ($quality == "mq") ? $id . "-mq": $id;
+$filename = ($quality == YoutubeThumbnailer::MEDIUM_QUALITY) ? $id . "-mq": $id;
 $filename .= $playButtonFIleName;
 
 
@@ -74,7 +74,7 @@ $image = imagecreatefromjpeg( "http://img.youtube.com/vi/" . $id . "/" . $qualit
 
 
 // IF HIGH QUALITY WE CREATE A NEW CANVAS WITHOUT THE BLACK BARS
-if($quality == "hq")
+if($quality == YoutubeThumbnailer::HIGH_QUALITY)
 {
 	$cleft = 0;
 	$ctop = 45;

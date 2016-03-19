@@ -6,6 +6,16 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 class YoutubeThumbnailer
 {
+    const DEFAULT_QUALITY = 'mq';
+    const HIGH_QUALITY = 'hq';
+    const MEDIUM_QUALITY = 'mq';
+    const DEFAULT_SHOW_PLAY = false;
+    const SHOW_PLAY = true;
+    const NOT_SHOW_PLAY = false;
+    const DEFAULT_APPLY_REFRESH = false;
+    const APPLY_REFRESH = true;
+    const NOT_APPLY_REFRESH = false;
+
     private $quality;
     private $input;
     private $play;
@@ -13,9 +23,9 @@ class YoutubeThumbnailer
 
     public function __construct()
     {
-        $this->quality = 'mq';
-        $this->play = false;
-        $this->refresh = false;
+        $this->quality = self::DEFAULT_QUALITY;
+        $this->play = self::DEFAULT_SHOW_PLAY;
+        $this->refresh = self::DEFAULT_APPLY_REFRESH;
     }
 
     public function setRequestParams($requestParams)
