@@ -47,7 +47,7 @@ class YoutubeThumbnailer
         }
     }
 
-    public function getYouTubeIdFromInput($input)
+    public function getVideoId($input)
     {
         $pattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i';
         preg_match($pattern, $input, $matches);

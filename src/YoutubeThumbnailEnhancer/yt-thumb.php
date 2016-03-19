@@ -23,7 +23,7 @@ if(substr($inpt, 0, 8) == "youtu.be"){ $inpt = "http://" . $inpt; $isUrl = true;
 if(substr($inpt, 0, 7) == "http://" OR substr($inpt, 0, 8) == "https://")
 {	
 	$isUrl = true;
-	$id = $youtbeThumbnailer->getYouTubeIdFromInput($inpt);
+	$id = $youtbeThumbnailer->getVideoId($inpt);
 }
 
 

@@ -40,9 +40,7 @@ class YoutubeThumbnailerTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultRequestParams()
     {
-        $params = [
-            'inpt' => 'http://www.youtube.com/watch?v=XZ4X1wcZ1GE'
-        ];
+        $params = ['inpt' => 'http://www.youtube.com/watch?v=XZ4X1wcZ1GE'];
         $this->youtubeThumbnailer->setRequestParams($params);
 
         $this->assertEquals(YoutubeThumbnailer::DEFAULT_QUALITY, $this->youtubeThumbnailer->getQuality());
@@ -51,17 +49,17 @@ class YoutubeThumbnailerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(YoutubeThumbnailer::DEFAULT_APPLY_REFRESH, $this->youtubeThumbnailer->getRefresh());
     }
 
-    public function testGetYoutubeIdFromInput()
+    public function testGetVideoId()
     {
         $youtubeId = 'XZ4X1wcZ1GE';
 
-        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getYouTubeIdFromInput('http://www.youtube.com/watch?v=XZ4X1wcZ1GE'));
-        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getYouTubeIdFromInput('http://youtube.com/watch?v=XZ4X1wcZ1GE'));
-        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getYouTubeIdFromInput('http://www.youtu.be/XZ4X1wcZ1GE'));
-        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getYouTubeIdFromInput('http://youtu.be/XZ4X1wcZ1GE'));
-        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getYouTubeIdFromInput('https://www.youtube.com/watch?v=XZ4X1wcZ1GE'));
-        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getYouTubeIdFromInput('https://youtube.com/watch?v=XZ4X1wcZ1GE'));
-        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getYouTubeIdFromInput('https://www.youtu.be/XZ4X1wcZ1GE'));
-        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getYouTubeIdFromInput('https://youtu.be/XZ4X1wcZ1GE'));
+        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getVideoId('http://www.youtube.com/watch?v=XZ4X1wcZ1GE'));
+        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getVideoId('http://youtube.com/watch?v=XZ4X1wcZ1GE'));
+        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getVideoId('http://www.youtu.be/XZ4X1wcZ1GE'));
+        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getVideoId('http://youtu.be/XZ4X1wcZ1GE'));
+        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getVideoId('https://www.youtube.com/watch?v=XZ4X1wcZ1GE'));
+        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getVideoId('https://youtube.com/watch?v=XZ4X1wcZ1GE'));
+        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getVideoId('https://www.youtu.be/XZ4X1wcZ1GE'));
+        $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getVideoId('https://youtu.be/XZ4X1wcZ1GE'));
     }
 }
