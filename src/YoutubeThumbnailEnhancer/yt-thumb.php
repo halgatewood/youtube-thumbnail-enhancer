@@ -5,40 +5,39 @@ namespace YoutubeThumbnailEnhancer;
 require __DIR__ . '/../../vendor/autoload.php';
 
 $youtbeThumbnailer = new YoutubeThumbnailer();
+$youtbeThumbnailer->setRequestParams($_REQUEST);
 
-// PARAMETERS
-$is_url 				= false;
-$quality 				= $_REQUEST['quality'];
-$quality 				= ($quality == "hq") ? "hq" : "mq";
-$inpt 					= trim($_REQUEST['inpt']);
-$show_play_icon			= isset($_REQUEST['play']) ? true : false;
-$play_btn_file_name 	= ($show_play_icon) ? "-play" : "";
+$isUrl = false;
+$quality = $youtbeThumbnailer->getQuality();
+$inpt = $youtbeThumbnailer->getInput();
+$showPlayIcon = $youtbeThumbnailer->getPlay();
+$playButtonFIleName = ($showPlayIcon) ? "-play" : "";
 
 
 // ADD HTTP
-if(substr($inpt, 0, 4) == "www."){ $inpt = "http://" . $inpt; $is_url = true; }
-if(substr($inpt, 0, 8) == "youtube."){ $inpt = "http://" . $inpt; $is_url = true; }
-if(substr($inpt, 0, 8) == "youtu.be"){ $inpt = "http://" . $inpt; $is_url = true; }
+if(substr($inpt, 0, 4) == "www."){ $inpt = "http://" . $inpt; $isUrl = true; }
+if(substr($inpt, 0, 8) == "youtube."){ $inpt = "http://" . $inpt; $isUrl = true; }
+if(substr($inpt, 0, 8) == "youtu.be"){ $inpt = "http://" . $inpt; $isUrl = true; }
 
 // IF URL GET ID
 if(substr($inpt, 0, 7) == "http://" OR substr($inpt, 0, 8) == "https://")
 {	
-	$is_url = true;
+	$isUrl = true;
 	$id = $youtbeThumbnailer->getYouTubeIdFromInput($inpt);
 }
 
 
 // IF NOT URL TRY ID AS INPUT
-if(!$is_url) { $id = $inpt; }
+if(!$isUrl) { $id = $inpt; }
 
 
 // FILENAME
 $filename = ($quality == "mq") ? $id . "-mq": $id;
-$filename .= $play_btn_file_name;
+$filename .= $playButtonFIleName;
 
 
 // IF EXISTS, GO
-if(file_exists("i/" . $filename . ".jpg") AND !isset($_GET['refresh']))
+if(file_exists("i/" . $filename . ".jpg") AND !$youtbeThumbnailer->getRefresh())
 {
 	header("Location: i/" . $filename . ".jpg");
 	die;
@@ -91,7 +90,7 @@ $imageHeight 	= imagesy($image);
 
 
 // ADD THE PLAY ICON
-$play_icon = $show_play_icon ? "play-" : "noplay-";
+$play_icon = $showPlayIcon ? "play-" : "noplay-";
 $play_icon .= $quality . ".png";
 $logoImage = imagecreatefrompng( $play_icon );
 

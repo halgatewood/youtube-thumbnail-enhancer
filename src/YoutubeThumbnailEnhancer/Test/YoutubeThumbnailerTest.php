@@ -4,10 +4,11 @@ namespace YoutubeThumbnailEnhancer\Test;
 
 use YoutubeThumbnailEnhancer\YoutubeThumbnailer;
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../../../vendor/autoload.php';
 
 class YoutubeThumbnailerTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var YoutubeThumbnailer */
     private $youtubeThumbnailer;
 
 
@@ -16,14 +17,41 @@ class YoutubeThumbnailerTest extends \PHPUnit_Framework_TestCase
         $this->youtubeThumbnailer = new YoutubeThumbnailer();
     }
 
-    /** @test */
-    public function should_be_instance_of_youtubethumbnailer()
+    public function testYoutubeThumbnailerInstance()
     {
         $this->assertInstanceOf(YoutubeThumbnailer::class, $this->youtubeThumbnailer);
     }
 
-    /** @test */
-    public function should_returns_youtube_id()
+    public function testCustomRequestParams()
+    {
+        $params = [
+            'quality' => 'hq',
+            'inpt' => 'http://www.youtube.com/watch?v=XZ4X1wcZ1GE',
+            'play' => '',
+            'refresh' => ''
+        ];
+        $this->youtubeThumbnailer->setRequestParams($params);
+
+        $this->assertEquals('hq', $this->youtubeThumbnailer->getQuality());
+        $this->assertEquals('http://www.youtube.com/watch?v=XZ4X1wcZ1GE', $this->youtubeThumbnailer->getInput());
+        $this->assertTrue($this->youtubeThumbnailer->getPlay());
+        $this->assertTrue($this->youtubeThumbnailer->getRefresh());
+    }
+
+    public function testDefaultRequestParams()
+    {
+        $params = [
+            'inpt' => 'http://www.youtube.com/watch?v=XZ4X1wcZ1GE'
+        ];
+        $this->youtubeThumbnailer->setRequestParams($params);
+
+        $this->assertEquals('mq', $this->youtubeThumbnailer->getQuality());
+        $this->assertEquals('http://www.youtube.com/watch?v=XZ4X1wcZ1GE', $this->youtubeThumbnailer->getInput());
+        $this->assertFalse($this->youtubeThumbnailer->getPlay());
+        $this->assertFalse($this->youtubeThumbnailer->getRefresh());
+    }
+
+    public function testGetYoutubeIdFromInput()
     {
         $youtubeId = 'XZ4X1wcZ1GE';
 
