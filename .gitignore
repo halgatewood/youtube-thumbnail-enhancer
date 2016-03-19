@@ -1,5 +1,5 @@
 .idea/
-src/i/
+src/YoutubeThumbnailEnhancer/i/
 vendor/
 composer.lock
 phpunit.xml

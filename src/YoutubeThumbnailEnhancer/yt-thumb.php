@@ -1,16 +1,10 @@
 <?php
 
+namespace YoutubeThumbnailEnhancer;
+
+require __DIR__ . '/../../vendor/autoload.php';
+
 $youtbeThumbnailer = new YoutubeThumbnailer();
-
-// GET YOUTUBE ID FROM THE SLEW OF YOUTUBE URLS 
-// (FOUND ON STACKEXCHANGE SOMEWHERE)
-function getYouTubeIdFromURL($url) 
-{
-	$pattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i';
-	preg_match($pattern, $url, $matches);
-	return isset($matches[1]) ? $matches[1] : false;
-}
-
 
 // PARAMETERS
 $is_url 				= false;
@@ -30,7 +24,7 @@ if(substr($inpt, 0, 8) == "youtu.be"){ $inpt = "http://" . $inpt; $is_url = true
 if(substr($inpt, 0, 7) == "http://" OR substr($inpt, 0, 8) == "https://")
 {	
 	$is_url = true;
-	$id = getYouTubeIdFromURL($inpt);
+	$id = $youtbeThumbnailer->getYouTubeIdFromInput($inpt);
 }
 
 
