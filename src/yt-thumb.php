@@ -1,29 +1,6 @@
 <?php
-/*
- * YouTube Thumbnail Enchancer by Hal Gatewood
- * License: The just-use-it license. Have fun!
- *
- * Dependances:
- * curl
- * GD Library
- * coffee
- *
- * Parameters:
- * inpt = YouTube URL or YouTube ID
- * quality = hq or mq
- * refresh = skips the cache to grab a fresh one
- * play = show play button in middle
- *
- * Usage:
- * http://example.com/yt-thumb.php?quality=hq&inpt=http://www.youtube.com/watch?v=XZ4X1wcZ1GE
- * http://example.com/yt-thumb.php?quality=mq&inpt=http://www.youtube.com/watch?v=XZ4X1wcZ1GE
- * http://example.com/yt-thumb.php?quality=hq&inpt=XZ4X1wcZ1GE
- * http://example.com/yt-thumb.php?quality=mq&inpt=XZ4X1wcZ1GE
- * http://example.com/yt-thumb.php?quality=hq&inpt=XZ4X1wcZ1GE&play
- * http://example.com/yt-thumb.php?quality=hq&inpt=XZ4X1wcZ1GE&play&refresh
- *
- */
 
+$youtbeThumbnailer = new YoutubeThumbnailer();
 
 // GET YOUTUBE ID FROM THE SLEW OF YOUTUBE URLS 
 // (FOUND ON STACKEXCHANGE SOMEWHERE)
