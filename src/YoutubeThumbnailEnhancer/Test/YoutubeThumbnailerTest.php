@@ -49,6 +49,33 @@ class YoutubeThumbnailerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(YoutubeThumbnailer::DEFAULT_APPLY_REFRESH, $this->youtubeThumbnailer->getRefresh());
     }
 
+    public function testInputIsUrl()
+    {
+        $params = ['inpt' => 'XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertFalse($this->youtubeThumbnailer->inputIsUrl());
+
+        $params = ['inpt' => 'www.youtube.com/watch?v=XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertTrue($this->youtubeThumbnailer->inputIsUrl());
+
+        $params = ['inpt' => 'youtube.com/watch?v=XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertTrue($this->youtubeThumbnailer->inputIsUrl());
+
+        $params = ['inpt' => 'youtu.be/XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertTrue($this->youtubeThumbnailer->inputIsUrl());
+
+        $params = ['inpt' => 'http://www.youtube.com/watch?v=XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertTrue($this->youtubeThumbnailer->inputIsUrl());
+
+        $params = ['inpt' => 'https://www.youtube.com/watch?v=XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertTrue($this->youtubeThumbnailer->inputIsUrl());
+    }
+
     public function testGetVideoId()
     {
         $youtubeId = 'XZ4X1wcZ1GE';

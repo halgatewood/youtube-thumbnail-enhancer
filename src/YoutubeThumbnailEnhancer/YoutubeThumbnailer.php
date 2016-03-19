@@ -28,6 +28,26 @@ class YoutubeThumbnailer
         $this->refresh = self::DEFAULT_APPLY_REFRESH;
     }
 
+    public function getQuality()
+    {
+        return $this->quality;
+    }
+
+    public function getInput()
+    {
+        return $this->input;
+    }
+
+    public function getPlay()
+    {
+        return $this->play;
+    }
+
+    public function getRefresh()
+    {
+        return $this->refresh;
+    }
+
     public function setRequestParams($requestParams)
     {
         if (array_key_exists('quality', $requestParams)) {
@@ -55,23 +75,12 @@ class YoutubeThumbnailer
         return isset($matches[1]) ? $matches[1] : false;
     }
 
-    public function getQuality()
+    public function inputIsUrl()
     {
-        return $this->quality;
-    }
-
-    public function getInput()
-    {
-        return $this->input;
-    }
-
-    public function getPlay()
-    {
-        return $this->play;
-    }
-
-    public function getRefresh()
-    {
-        return $this->refresh;
+        return substr($this->input, 0, 4) == "www."
+            || substr($this->input, 0, 8) == "youtube."
+            || substr($this->input, 0, 8) == "youtu.be"
+            || substr($this->input, 0, 7) == "http://"
+            || substr($this->input, 0, 8) == "https://";
     }
 }
