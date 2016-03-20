@@ -25,13 +25,16 @@ class YoutubeThumbnailer
     private $refresh;
     /** @var InputManager */
     private $inputManager;
+    /** @var ImageAdapter */
+    private $imageAdapter;
 
     public function __construct()
     {
-        $this->inputManager = new InputManager();
         $this->quality = self::DEFAULT_QUALITY;
         $this->play = self::DEFAULT_SHOW_PLAY;
         $this->refresh = self::DEFAULT_APPLY_REFRESH;
+        $this->inputManager = new InputManager();
+        $this->imageAdapter = new ImageAdapter();
     }
 
     public function getQuality()
@@ -133,32 +136,32 @@ class YoutubeThumbnailer
 
 
         // CREATE IMAGE FROM YOUTUBE THUMB
-        $image = imagecreatefromjpeg("http://img.youtube.com/vi/" . $this->getVideoId() . "/" . $this->getQuality() . "default" . self::JPG_EXTENSION);
+        $image = $this->imageAdapter->createImageFromJpgPath("http://img.youtube.com/vi/" . $this->getVideoId() . "/" . $this->getQuality() . "default" . self::JPG_EXTENSION);
 
 
         // IF HIGH QUALITY WE CREATE A NEW CANVAS WITHOUT THE BLACK BARS
         if ($this->getQuality() == self::HIGH_QUALITY) {
             $cleft = 0;
             $ctop = 45;
-            $canvas = imagecreatetruecolor(480, 270);
-            imagecopy($canvas, $image, 0, 0, $cleft, $ctop, 480, 360);
+            $canvas = $this->imageAdapter->createTrueColorImage(480, 270);
+            $this->imageAdapter->copyPartOfImage($canvas, $image, 0, 0, $cleft, $ctop, 480, 360);
             $image = $canvas;
         }
 
 
-        $imageWidth = imagesx($image);
-        $imageHeight = imagesy($image);
+        $imageWidth = $this->imageAdapter->getImageWidth($image);
+        $imageHeight = $this->imageAdapter->getImageHeight($image);
 
 
         // ADD THE PLAY ICON
         $play_icon = $this->getPlay() ? "play-" : "noplay-";
         $play_icon .= $this->getQuality() . self::PNG_EXTENSION;
-        $logoImage = imagecreatefrompng($play_icon);
+        $logoImage = $this->imageAdapter->createImageFromPngPath($play_icon);
 
-        imagealphablending($logoImage, true);
+        $this->imageAdapter->setBlendingMode($logoImage, true);
 
-        $logoWidth = imagesx($logoImage);
-        $logoHeight = imagesy($logoImage);
+        $logoWidth = $this->imageAdapter->getImageWidth($logoImage);
+        $logoHeight = $this->imageAdapter->getImageHeight($logoImage);
 
         // CENTER PLAY ICON
         $left = round($imageWidth / 2) - round($logoWidth / 2);
@@ -166,19 +169,19 @@ class YoutubeThumbnailer
 
 
         // CONVERT TO PNG SO WE CAN GET THAT PLAY BUTTON ON THERE
-        imagecopy($image, $logoImage, $left, $top, 0, 0, $logoWidth, $logoHeight);
-        imagepng($image, $this->getFileName() . self::PNG_EXTENSION, 9);
+        $this->imageAdapter->copyPartOfImage($image, $logoImage, $left, $top, 0, 0, $logoWidth, $logoHeight);
+        $this->imageAdapter->imagePng($image, $this->getFileName() . self::PNG_EXTENSION, 9);
 
 
         // MASHUP FINAL IMAGE AS A JPEG
-        $input = imagecreatefrompng($this->getFileName() . self::PNG_EXTENSION);
-        $output = imagecreatetruecolor($imageWidth, $imageHeight);
-        $white = imagecolorallocate($output, 255, 255, 255);
-        imagefilledrectangle($output, 0, 0, $imageWidth, $imageHeight, $white);
-        imagecopy($output, $input, 0, 0, 0, 0, $imageWidth, $imageHeight);
+        $input = $this->imageAdapter->createImageFromPngPath($this->getFileName() . self::PNG_EXTENSION);
+        $output = $this->imageAdapter->createTrueColorImage($imageWidth, $imageHeight);
+        $white = $this->imageAdapter->imageColorAllocate($output, 255, 255, 255);
+        $this->imageAdapter->imageFilledRectangle($output, 0, 0, $imageWidth, $imageHeight, $white);
+        $this->imageAdapter->copyPartOfImage($output, $input, 0, 0, 0, 0, $imageWidth, $imageHeight);
 
         // OUTPUT TO 'i' FOLDER
-        imagejpeg($output, self::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION, 95);
+        $this->imageAdapter->imageJpeg($output, self::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION, 95);
 
         // UNLINK PNG VERSION
         @unlink($this->getFileName() . self::PNG_EXTENSION);
