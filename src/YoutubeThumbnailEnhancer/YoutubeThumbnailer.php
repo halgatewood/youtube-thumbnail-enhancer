@@ -6,6 +6,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 class YoutubeThumbnailer
 {
+    const THUMBNAILS_DIRECTORY = 'i/';
     const DEFAULT_QUALITY = 'mq';
     const HIGH_QUALITY = 'hq';
     const MEDIUM_QUALITY = 'mq';

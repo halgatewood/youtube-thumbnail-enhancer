@@ -6,9 +6,10 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 $youtbeThumbnailer = new YoutubeThumbnailer();
 $youtbeThumbnailer->setRequestParams($_REQUEST);
+$videoId = $youtbeThumbnailer->getVideoId();
 
 $playButtonFileName = ($youtbeThumbnailer->getPlay()) ? "-play" : "";
-$videoId = $youtbeThumbnailer->getVideoId();
+
 
 
 // FILENAME
@@ -17,9 +18,9 @@ $filename .= $playButtonFileName;
 
 
 // IF EXISTS, GO
-if(file_exists("i/" . $filename . ".jpg") AND !$youtbeThumbnailer->getRefresh())
+if(file_exists(YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $filename . ".jpg") AND !$youtbeThumbnailer->getRefresh())
 {
-	header("Location: i/" . $filename . ".jpg");
+	header('Location: '. YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $filename . '.jpg');
 	die;
 }
 
@@ -97,13 +98,11 @@ imagefilledrectangle($output, 0, 0, $imageWidth, $imageHeight, $white);
 imagecopy($output, $input, 0, 0, 0, 0, $imageWidth, $imageHeight);
 
 // OUTPUT TO 'i' FOLDER
-imagejpeg($output, "i/" . $filename . ".jpg", 95);
+imagejpeg($output, YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $filename . ".jpg", 95);
 
 // UNLINK PNG VERSION
 @unlink($filename .".png");
 
 // REDIRECT TO NEW IMAGE
-header("Location: i/" . $filename . ".jpg");
+header('Location: '. YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $filename . '.jpg');
 die;
-
-?>
