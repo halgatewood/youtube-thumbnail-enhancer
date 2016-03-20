@@ -6,19 +6,24 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 $youtbeThumbnailer = new YoutubeThumbnailer();
 $youtbeThumbnailer->setRequestParams($_REQUEST);
-$videoId = $youtbeThumbnailer->getVideoId();
-$filename = $youtbeThumbnailer->getFileName();
+
+// IF NOT ID THROW AN ERROR
+if(!($youtbeThumbnailer->getVideoId()))
+{
+    header("Status: 404 Not Found");
+    die("YouTube ID not found");
+}
 
 // IF EXISTS, GO
-if(file_exists(YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $filename . ".jpg") AND !$youtbeThumbnailer->getRefresh())
+if(file_exists(YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $youtbeThumbnailer->getFileName() . ".jpg") AND !$youtbeThumbnailer->getRefresh())
 {
-	header('Location: '. YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $filename . '.jpg');
+	header('Location: '. YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $youtbeThumbnailer->getFileName() . '.jpg');
 	die;
 }
 
 
 // CHECK IF YOUTUBE VIDEO
-$handle = curl_init("https://www.youtube.com/watch/?v=" . $videoId);
+$handle = curl_init("https://www.youtube.com/watch/?v=" . $youtbeThumbnailer->getVideoId());
 curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
 $response = curl_exec($handle);
 
@@ -34,16 +39,8 @@ if($httpCode == 404 OR !$response)
 curl_close($handle);
 
 
-// IF NOT ID THROW AN ERROR
-if(!$videoId)
-{
-	header("Status: 404 Not Found");
-	die("YouTube ID not found");
-}
-
-
 // CREATE IMAGE FROM YOUTUBE THUMB
-$image = imagecreatefromjpeg( "http://img.youtube.com/vi/" . $videoId . "/" . $youtbeThumbnailer->getQuality() . "default.jpg" );
+$image = imagecreatefromjpeg( "http://img.youtube.com/vi/" . $youtbeThumbnailer->getVideoId() . "/" . $youtbeThumbnailer->getQuality() . "default.jpg" );
 
 
 // IF HIGH QUALITY WE CREATE A NEW CANVAS WITHOUT THE BLACK BARS
@@ -79,22 +76,22 @@ $top = round($imageHeight / 2) - round($logoHeight / 2);
 
 // CONVERT TO PNG SO WE CAN GET THAT PLAY BUTTON ON THERE
 imagecopy( $image, $logoImage, $left, $top, 0, 0, $logoWidth, $logoHeight);
-imagepng( $image, $filename .".png", 9);
+imagepng( $image, $youtbeThumbnailer->getFileName() .".png", 9);
 
 
 // MASHUP FINAL IMAGE AS A JPEG
-$input = imagecreatefrompng($filename .".png");
+$input = imagecreatefrompng($youtbeThumbnailer->getFileName() .".png");
 $output = imagecreatetruecolor($imageWidth, $imageHeight);
 $white = imagecolorallocate($output,  255, 255, 255);
 imagefilledrectangle($output, 0, 0, $imageWidth, $imageHeight, $white);
 imagecopy($output, $input, 0, 0, 0, 0, $imageWidth, $imageHeight);
 
 // OUTPUT TO 'i' FOLDER
-imagejpeg($output, YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $filename . ".jpg", 95);
+imagejpeg($output, YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $youtbeThumbnailer->getFileName() . ".jpg", 95);
 
 // UNLINK PNG VERSION
-@unlink($filename .".png");
+@unlink($youtbeThumbnailer->getFileName() .".png");
 
 // REDIRECT TO NEW IMAGE
-header('Location: '. YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $filename . '.jpg');
+header('Location: '. YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $youtbeThumbnailer->getFileName() . '.jpg');
 die;
