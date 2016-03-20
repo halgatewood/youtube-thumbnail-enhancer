@@ -11,7 +11,7 @@ $isUrl = $youtbeThumbnailer->inputIsUrl();
 $quality = $youtbeThumbnailer->getQuality();
 $inpt = $youtbeThumbnailer->getInput();
 $showPlayIcon = $youtbeThumbnailer->getPlay();
-$playButtonFIleName = ($showPlayIcon) ? "-play" : "";
+$playButtonFileName = ($showPlayIcon) ? "-play" : "";
 
 
 // ADD HTTP
@@ -32,7 +32,7 @@ if(!$isUrl) { $id = $inpt; }
 
 // FILENAME
 $filename = ($quality == YoutubeThumbnailer::MEDIUM_QUALITY) ? $id . "-mq": $id;
-$filename .= $playButtonFIleName;
+$filename .= $playButtonFileName;
 
 
 // IF EXISTS, GO
