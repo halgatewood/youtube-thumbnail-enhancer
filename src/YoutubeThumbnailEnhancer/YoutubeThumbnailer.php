@@ -18,6 +18,7 @@ class YoutubeThumbnailer
     const NOT_APPLY_REFRESH = false;
     const JPG_EXTENSION = '.jpg';
     const PNG_EXTENSION = '.png';
+    const IMAGE_UTILS_DIR = 'imageUtils/';
 
     private $quality;
     private $input;
@@ -156,7 +157,7 @@ class YoutubeThumbnailer
         // ADD THE PLAY ICON
         $play_icon = $this->getPlay() ? "play-" : "noplay-";
         $play_icon .= $this->getQuality() . self::PNG_EXTENSION;
-        $logoImage = $this->imageAdapter->createImageFromPngPath($play_icon);
+        $logoImage = $this->imageAdapter->createImageFromPngPath(self::IMAGE_UTILS_DIR . $play_icon);
 
         $this->imageAdapter->setBlendingMode($logoImage, true);
 
