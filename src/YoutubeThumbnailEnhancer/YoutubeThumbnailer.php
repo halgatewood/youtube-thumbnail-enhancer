@@ -20,9 +20,12 @@ class YoutubeThumbnailer
     private $input;
     private $play;
     private $refresh;
+    /** @var InputManager */
+    private $inputManager;
 
     public function __construct()
     {
+        $this->inputManager = new InputManager();
         $this->quality = self::DEFAULT_QUALITY;
         $this->play = self::DEFAULT_SHOW_PLAY;
         $this->refresh = self::DEFAULT_APPLY_REFRESH;
@@ -55,7 +58,7 @@ class YoutubeThumbnailer
         }
 
         if (array_key_exists('inpt', $requestParams)) {
-            $this->input = trim($requestParams['inpt']);
+            $this->input = $this->inputManager->sanitizeUrl($requestParams['inpt']);
         }
 
         if (array_key_exists('play', $requestParams)) {
@@ -67,33 +70,15 @@ class YoutubeThumbnailer
         }
     }
 
-    public function getVideoId($input)
+    public function getVideoId()
     {
+        if (!$this->inputManager->isUrl($this->input)) {
+            return $this->input;
+        }
+
         $pattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i';
-        preg_match($pattern, $input, $matches);
+        preg_match($pattern, $this->input, $matches);
 
         return isset($matches[1]) ? $matches[1] : false;
-    }
-
-    public function inputIsUrl()
-    {
-        return substr($this->input, 0, 4) == "www."
-            || substr($this->input, 0, 8) == "youtube."
-            || substr($this->input, 0, 8) == "youtu.be"
-            || substr($this->input, 0, 7) == "http://"
-            || substr($this->input, 0, 8) == "https://";
-    }
-
-    public function inputHasProtocol()
-    {
-        return substr($this->getInput(), 0, 7) == 'http://'
-            || substr($this->getInput(), 0, 8) == 'https://';
-    }
-
-    public function inputSanitize()
-    {
-        if ($this->inputIsUrl() && !$this->inputHasProtocol()) {
-            $this->input = 'http://'.$this->input;
-        }
     }
 }

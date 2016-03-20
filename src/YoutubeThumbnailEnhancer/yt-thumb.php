@@ -8,25 +8,11 @@ $youtbeThumbnailer = new YoutubeThumbnailer();
 $youtbeThumbnailer->setRequestParams($_REQUEST);
 
 $playButtonFileName = ($youtbeThumbnailer->getPlay()) ? "-play" : "";
-
-
-$youtbeThumbnailer->inputSanitize();
-$isUrl = $youtbeThumbnailer->inputIsUrl();
-
-
-// IF URL GET ID
-if(substr($youtbeThumbnailer->getInput(), 0, 7) == "http://" OR substr($youtbeThumbnailer->getInput(), 0, 8) == "https://")
-{
-	$id = $youtbeThumbnailer->getVideoId($youtbeThumbnailer->getInput());
-}
-
-
-// IF NOT URL TRY ID AS INPUT
-if(!$isUrl) { $id = $youtbeThumbnailer->getInput(); }
+$videoId = $youtbeThumbnailer->getVideoId();
 
 
 // FILENAME
-$filename = ($youtbeThumbnailer->getQuality() == YoutubeThumbnailer::MEDIUM_QUALITY) ? $id . "-mq": $id;
+$filename = ($youtbeThumbnailer->getQuality() == YoutubeThumbnailer::MEDIUM_QUALITY) ? $videoId . "-mq": $videoId;
 $filename .= $playButtonFileName;
 
 
@@ -39,7 +25,7 @@ if(file_exists("i/" . $filename . ".jpg") AND !$youtbeThumbnailer->getRefresh())
 
 
 // CHECK IF YOUTUBE VIDEO
-$handle = curl_init("https://www.youtube.com/watch/?v=" . $id);
+$handle = curl_init("https://www.youtube.com/watch/?v=" . $videoId);
 curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
 $response = curl_exec($handle);
 
@@ -56,7 +42,7 @@ curl_close($handle);
 
 
 // IF NOT ID THROW AN ERROR
-if(!$id) 
+if(!$videoId)
 {
 	header("Status: 404 Not Found");
 	die("YouTube ID not found");
@@ -64,7 +50,7 @@ if(!$id)
 
 
 // CREATE IMAGE FROM YOUTUBE THUMB
-$image = imagecreatefromjpeg( "http://img.youtube.com/vi/" . $id . "/" . $youtbeThumbnailer->getQuality() . "default.jpg" );
+$image = imagecreatefromjpeg( "http://img.youtube.com/vi/" . $videoId . "/" . $youtbeThumbnailer->getQuality() . "default.jpg" );
 
 
 // IF HIGH QUALITY WE CREATE A NEW CANVAS WITHOUT THE BLACK BARS
