@@ -83,4 +83,17 @@ class YoutubeThumbnailer
             || substr($this->input, 0, 7) == "http://"
             || substr($this->input, 0, 8) == "https://";
     }
+
+    public function inputHasProtocol()
+    {
+        return substr($this->getInput(), 0, 7) == 'http://'
+            || substr($this->getInput(), 0, 8) == 'https://';
+    }
+
+    public function inputSanitize()
+    {
+        if ($this->inputIsUrl() && !$this->inputHasProtocol()) {
+            $this->input = 'http://'.$this->input;
+        }
+    }
 }

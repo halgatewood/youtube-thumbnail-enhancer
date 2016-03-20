@@ -7,17 +7,16 @@ require __DIR__ . '/../../vendor/autoload.php';
 $youtbeThumbnailer = new YoutubeThumbnailer();
 $youtbeThumbnailer->setRequestParams($_REQUEST);
 
-$isUrl = $youtbeThumbnailer->inputIsUrl();
 $quality = $youtbeThumbnailer->getQuality();
 $inpt = $youtbeThumbnailer->getInput();
 $showPlayIcon = $youtbeThumbnailer->getPlay();
+
 $playButtonFileName = ($showPlayIcon) ? "-play" : "";
 
 
-// ADD HTTP
-if(substr($inpt, 0, 4) == "www."){ $inpt = "http://" . $inpt;}
-if(substr($inpt, 0, 8) == "youtube."){ $inpt = "http://" . $inpt;}
-if(substr($inpt, 0, 8) == "youtu.be"){ $inpt = "http://" . $inpt;}
+$youtbeThumbnailer->inputSanitize();
+$isUrl = $youtbeThumbnailer->inputIsUrl();
+
 
 // IF URL GET ID
 if(substr($inpt, 0, 7) == "http://" OR substr($inpt, 0, 8) == "https://")

@@ -76,6 +76,48 @@ class YoutubeThumbnailerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->youtubeThumbnailer->inputIsUrl());
     }
 
+    public function testInputHasProtocol()
+    {
+        $params = ['inpt' => 'XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertFalse($this->youtubeThumbnailer->inputHasProtocol());
+
+        $params = ['inpt' => 'www.youtube.com/watch?v=XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertFalse($this->youtubeThumbnailer->inputHasProtocol());
+
+        $params = ['inpt' => 'http://youtube.com/watch?v=XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertTrue($this->youtubeThumbnailer->inputHasProtocol());
+
+        $params = ['inpt' => 'https://youtu.be/XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertTrue($this->youtubeThumbnailer->inputHasProtocol());
+    }
+
+    public function testSanitizeInput()
+    {
+        $params = ['inpt' => 'XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->youtubeThumbnailer->inputSanitize();
+        $this->assertEquals('XZ4X1wcZ1GE', $this->youtubeThumbnailer->getInput());
+
+        $params = ['inpt' => 'http://www.youtube.com/watch?v=XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->youtubeThumbnailer->inputSanitize();
+        $this->assertEquals('http://www.youtube.com/watch?v=XZ4X1wcZ1GE', $this->youtubeThumbnailer->getInput());
+
+        $params = ['inpt' => 'https://www.youtube.com/watch?v=XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->youtubeThumbnailer->inputSanitize();
+        $this->assertEquals('https://www.youtube.com/watch?v=XZ4X1wcZ1GE', $this->youtubeThumbnailer->getInput());
+
+        $params = ['inpt' => 'www.youtube.com/watch?v=XZ4X1wcZ1GE'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->youtubeThumbnailer->inputSanitize();
+        $this->assertEquals('http://www.youtube.com/watch?v=XZ4X1wcZ1GE', $this->youtubeThumbnailer->getInput());
+    }
+
     public function testGetVideoId()
     {
         $youtubeId = 'XZ4X1wcZ1GE';
