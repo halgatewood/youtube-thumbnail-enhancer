@@ -7,11 +7,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 $youtbeThumbnailer = new YoutubeThumbnailer();
 $youtbeThumbnailer->setRequestParams($_REQUEST);
 
-$quality = $youtbeThumbnailer->getQuality();
-$inpt = $youtbeThumbnailer->getInput();
-$showPlayIcon = $youtbeThumbnailer->getPlay();
-
-$playButtonFileName = ($showPlayIcon) ? "-play" : "";
+$playButtonFileName = ($youtbeThumbnailer->getPlay()) ? "-play" : "";
 
 
 $youtbeThumbnailer->inputSanitize();
@@ -19,18 +15,18 @@ $isUrl = $youtbeThumbnailer->inputIsUrl();
 
 
 // IF URL GET ID
-if(substr($inpt, 0, 7) == "http://" OR substr($inpt, 0, 8) == "https://")
+if(substr($youtbeThumbnailer->getInput(), 0, 7) == "http://" OR substr($youtbeThumbnailer->getInput(), 0, 8) == "https://")
 {
-	$id = $youtbeThumbnailer->getVideoId($inpt);
+	$id = $youtbeThumbnailer->getVideoId($youtbeThumbnailer->getInput());
 }
 
 
 // IF NOT URL TRY ID AS INPUT
-if(!$isUrl) { $id = $inpt; }
+if(!$isUrl) { $id = $youtbeThumbnailer->getInput(); }
 
 
 // FILENAME
-$filename = ($quality == YoutubeThumbnailer::MEDIUM_QUALITY) ? $id . "-mq": $id;
+$filename = ($youtbeThumbnailer->getQuality() == YoutubeThumbnailer::MEDIUM_QUALITY) ? $id . "-mq": $id;
 $filename .= $playButtonFileName;
 
 
@@ -68,11 +64,11 @@ if(!$id)
 
 
 // CREATE IMAGE FROM YOUTUBE THUMB
-$image = imagecreatefromjpeg( "http://img.youtube.com/vi/" . $id . "/" . $quality . "default.jpg" );
+$image = imagecreatefromjpeg( "http://img.youtube.com/vi/" . $id . "/" . $youtbeThumbnailer->getQuality() . "default.jpg" );
 
 
 // IF HIGH QUALITY WE CREATE A NEW CANVAS WITHOUT THE BLACK BARS
-if($quality == YoutubeThumbnailer::HIGH_QUALITY)
+if($youtbeThumbnailer->getQuality() == YoutubeThumbnailer::HIGH_QUALITY)
 {
 	$cleft = 0;
 	$ctop = 45;
@@ -88,8 +84,8 @@ $imageHeight 	= imagesy($image);
 
 
 // ADD THE PLAY ICON
-$play_icon = $showPlayIcon ? "play-" : "noplay-";
-$play_icon .= $quality . ".png";
+$play_icon = $youtbeThumbnailer->getPlay() ? "play-" : "noplay-";
+$play_icon .= $youtbeThumbnailer->getQuality() . ".png";
 $logoImage = imagecreatefrompng( $play_icon );
 
 imagealphablending($logoImage, true);
