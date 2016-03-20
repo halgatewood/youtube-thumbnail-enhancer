@@ -16,6 +16,8 @@ class YoutubeThumbnailer
     const DEFAULT_APPLY_REFRESH = false;
     const APPLY_REFRESH = true;
     const NOT_APPLY_REFRESH = false;
+    const JPG_EXTENSION = '.jpg';
+    const PNG_EXTENSION = '.png';
 
     private $quality;
     private $input;
