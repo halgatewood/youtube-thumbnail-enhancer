@@ -82,4 +82,19 @@ class YoutubeThumbnailer
 
         return isset($matches[1]) ? $matches[1] : false;
     }
+
+    public function getFileName()
+    {
+        $fileName = $this->getVideoId();
+
+        if (self::MEDIUM_QUALITY === $this->quality) {
+            $fileName .= '-'. self::MEDIUM_QUALITY;
+        }
+
+        if (self::SHOW_PLAY == $this->play) {
+            $fileName .= '-play';
+        }
+
+        return $fileName;
+    }
 }

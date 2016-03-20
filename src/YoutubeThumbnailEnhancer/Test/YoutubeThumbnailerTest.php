@@ -89,4 +89,23 @@ class YoutubeThumbnailerTest extends \PHPUnit_Framework_TestCase
         $this->youtubeThumbnailer->setRequestParams($params);
         $this->assertEquals($youtubeId, $this->youtubeThumbnailer->getVideoId());
     }
+
+    public function testGetFileName()
+    {
+        $params = ['inpt' => 'XXXXXXXXXXX', 'quality' => 'hq'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertEquals('XXXXXXXXXXX', $this->youtubeThumbnailer->getFileName());
+
+        $params = ['inpt' => 'XXXXXXXXXXX', 'quality' => 'mq'];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertEquals('XXXXXXXXXXX-mq', $this->youtubeThumbnailer->getFileName());
+
+        $params = ['inpt' => 'XXXXXXXXXXX', 'quality' => 'mq', 'play' => ''];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertEquals('XXXXXXXXXXX-mq-play', $this->youtubeThumbnailer->getFileName());
+
+        $params = ['inpt' => 'XXXXXXXXXXX', 'quality' => 'hq', 'play' => ''];
+        $this->youtubeThumbnailer->setRequestParams($params);
+        $this->assertEquals('XXXXXXXXXXX-play', $this->youtubeThumbnailer->getFileName());
+    }
 }

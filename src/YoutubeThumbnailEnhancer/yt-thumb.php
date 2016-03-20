@@ -7,15 +7,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 $youtbeThumbnailer = new YoutubeThumbnailer();
 $youtbeThumbnailer->setRequestParams($_REQUEST);
 $videoId = $youtbeThumbnailer->getVideoId();
-
-$playButtonFileName = ($youtbeThumbnailer->getPlay()) ? "-play" : "";
-
-
-
-// FILENAME
-$filename = ($youtbeThumbnailer->getQuality() == YoutubeThumbnailer::MEDIUM_QUALITY) ? $videoId . "-mq": $videoId;
-$filename .= $playButtonFileName;
-
+$filename = $youtbeThumbnailer->getFileName();
 
 // IF EXISTS, GO
 if(file_exists(YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $filename . ".jpg") AND !$youtbeThumbnailer->getRefresh())
