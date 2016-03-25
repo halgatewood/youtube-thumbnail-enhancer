@@ -8,17 +8,16 @@ class InputManager
 {
     public function isUrl($url)
     {
-        return substr($url, 0, 4) == "www."
-            || substr($url, 0, 8) == "youtube."
-            || substr($url, 0, 8) == "youtu.be"
-            || substr($url, 0, 7) == "http://"
-            || substr($url, 0, 8) == "https://";
+        return $this->startsWith($url, 'www.')
+            || $this->startsWith($url, 'youtube.')
+            || $this->startsWith($url, 'youtu.be')
+            || $this->startsWith($url, 'http://')
+            || $this->startsWith($url, 'https://');
     }
 
     public function hasProtocol($url)
     {
-        return substr($url, 0, 7) == 'http://'
-        || substr($url, 0, 8) == 'https://';
+        return $this->startsWith($url, 'http://') || $this->startsWith($url, 'https://');
     }
 
     public function sanitizeUrl($url)
@@ -30,5 +29,10 @@ class InputManager
         }
 
         return $sanitizedUrl;
+    }
+
+    private function startsWith($haystack, $needle) {
+        return '' === $needle
+            || false !== strrpos($haystack, $needle, -strlen($haystack));
     }
 }
