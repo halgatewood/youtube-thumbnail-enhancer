@@ -28,6 +28,10 @@ class YoutubeThumbnailer
     private $inputManager;
     /** @var ImageAdapter */
     private $imageAdapter;
+    /** @var FileAdapter */
+    private $fileAdapter;
+    /** @var NetworkAdapter */
+    private $networkAdapter;
 
     public function __construct()
     {
@@ -36,6 +40,8 @@ class YoutubeThumbnailer
         $this->refresh = self::DEFAULT_APPLY_REFRESH;
         $this->inputManager = new InputManager();
         $this->imageAdapter = new ImageAdapter();
+        $this->fileAdapter = new FileAdapter();
+        $this->networkAdapter = new NetworkAdapter();
     }
 
     public function getQuality()
@@ -107,33 +113,29 @@ class YoutubeThumbnailer
     public function generateThumbnail()
     {
         if (!($this->getVideoId())) {
-            header('Status: 404 Not Found');
-            die('YouTube ID not found');
+            $this->returnResponse('Status: 404 Not Found', 'YouTube ID not found');
         }
 
-
-        if (file_exists(YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION)
+        if ($this->fileAdapter->fileExists(YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION)
             && !$this->getRefresh()
         ) {
-            header('Location: ' . YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION);
-            die;
+            $this->returnResponse('Location: ' . YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION);
         }
 
 
         // CHECK IF YOUTUBE VIDEO
-        $handle = curl_init("https://www.youtube.com/watch/?v=" . $this->getVideoId());
-        curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
-        $response = curl_exec($handle);
+        $handle = $this->networkAdapter->curlInit("https://www.youtube.com/watch/?v=" . $this->getVideoId());
+        $this->networkAdapter->curlSetOption($handle, CURLOPT_RETURNTRANSFER, TRUE);
+        $response = $this->networkAdapter->curlExec($handle);
 
 
         // CHECK FOR 404 OR NO RESPONSE
-        $httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+        $httpCode = $this->networkAdapter->curlGetInfo($handle, CURLINFO_HTTP_CODE);
         if ($httpCode == 404 OR !$response) {
-            header("Status: 404 Not Found");
-            die("No YouTube video found or YouTube timed out. Try again soon.");
+            $this->returnResponse('Status: 404 Not Found', 'No YouTube video found or YouTube timed out. Try again soon.');
         }
 
-        curl_close($handle);
+        $this->networkAdapter->curlClose($handle);
 
 
         // CREATE IMAGE FROM YOUTUBE THUMB
@@ -185,10 +187,15 @@ class YoutubeThumbnailer
         $this->imageAdapter->imageJpeg($output, self::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION, 95);
 
         // UNLINK PNG VERSION
-        @unlink($this->getFileName() . self::PNG_EXTENSION);
+        $this->fileAdapter->removeFile($this->getFileName() . self::PNG_EXTENSION);
 
         // REDIRECT TO NEW IMAGE
-        header('Location: ' . self::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION);
-        die;
+        $this->returnResponse('Location: ' . self::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION);
+    }
+
+    private function returnResponse($header, $message = '')
+    {
+        header($header);
+        die($message);
     }
 }
