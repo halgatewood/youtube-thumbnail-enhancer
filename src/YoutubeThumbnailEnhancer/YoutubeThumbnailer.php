@@ -129,15 +129,8 @@ class YoutubeThumbnailer
         }
 
         $image = $this->createImageFromYoutubeThumb();
-
-
-        // IF HIGH QUALITY WE CREATE A NEW CANVAS WITHOUT THE BLACK BARS
-        if ($this->getQuality() == self::HIGH_QUALITY) {
-            $cleft = 0;
-            $ctop = 45;
-            $canvas = $this->imageAdapter->createTrueColorImage(480, 270);
-            $this->imageAdapter->copyPartOfImage($canvas, $image, 0, 0, $cleft, $ctop, 480, 360);
-            $image = $canvas;
+        if (self::HIGH_QUALITY === $this->getQuality()) {
+            $image = $this->convertImageToHighQuality($image);
         }
 
 
@@ -210,5 +203,15 @@ class YoutubeThumbnailer
     {
         return $this->imageAdapter->createImageFromJpgPath(
             'http://img.youtube.com/vi/' . $this->getVideoId() . '/' . $this->getQuality() . 'default' . self::JPG_EXTENSION);
+    }
+
+    private function convertImageToHighQuality($image)
+    {
+        $cleft = 0;
+        $ctop = 45;
+        $canvas = $this->imageAdapter->createTrueColorImage(480, 270);
+        $this->imageAdapter->copyPartOfImage($canvas, $image, 0, 0, $cleft, $ctop, 480, 360);
+
+        return $canvas;
     }
 }
