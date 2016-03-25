@@ -128,8 +128,7 @@ class YoutubeThumbnailer
             );
         }
 
-        // CREATE IMAGE FROM YOUTUBE THUMB
-        $image = $this->imageAdapter->createImageFromJpgPath("http://img.youtube.com/vi/" . $this->getVideoId() . "/" . $this->getQuality() . "default" . self::JPG_EXTENSION);
+        $image = $this->createImageFromYoutubeThumb();
 
 
         // IF HIGH QUALITY WE CREATE A NEW CANVAS WITHOUT THE BLACK BARS
@@ -205,5 +204,11 @@ class YoutubeThumbnailer
         $this->networkAdapter->curlClose($handle);
 
         return $httpCode !== 404 && $response;
+    }
+
+    private function createImageFromYoutubeThumb()
+    {
+        return $this->imageAdapter->createImageFromJpgPath(
+            'http://img.youtube.com/vi/' . $this->getVideoId() . '/' . $this->getQuality() . 'default' . self::JPG_EXTENSION);
     }
 }
