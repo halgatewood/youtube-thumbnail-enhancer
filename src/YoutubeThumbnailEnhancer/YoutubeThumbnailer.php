@@ -122,21 +122,11 @@ class YoutubeThumbnailer
             );
         }
 
-
-        // CHECK IF YOUTUBE VIDEO
-        $handle = $this->networkAdapter->curlInit("https://www.youtube.com/watch/?v=" . $this->getVideoId());
-        $this->networkAdapter->curlSetOption($handle, CURLOPT_RETURNTRANSFER, TRUE);
-        $response = $this->networkAdapter->curlExec($handle);
-
-
-        // CHECK FOR 404 OR NO RESPONSE
-        $httpCode = $this->networkAdapter->curlGetInfo($handle, CURLINFO_HTTP_CODE);
-        if ($httpCode == 404 OR !$response) {
-            $this->returnResponse('Status: 404 Not Found', 'No YouTube video found or YouTube timed out. Try again soon.');
+        if (!$this->youtubeVideoExists($this->getVideoId())) {
+            $this->returnResponse(
+                'Status: 404 Not Found', 'No YouTube video found or YouTube timed out. Try again soon.'
+            );
         }
-
-        $this->networkAdapter->curlClose($handle);
-
 
         // CREATE IMAGE FROM YOUTUBE THUMB
         $image = $this->imageAdapter->createImageFromJpgPath("http://img.youtube.com/vi/" . $this->getVideoId() . "/" . $this->getQuality() . "default" . self::JPG_EXTENSION);
@@ -204,5 +194,16 @@ class YoutubeThumbnailer
         return $this->fileAdapter->fileExists(
             YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION
         );
+    }
+
+    private function youtubeVideoExists($videoId)
+    {
+        $handle = $this->networkAdapter->curlInit('https://www.youtube.com/watch/?v=' . $videoId);
+        $this->networkAdapter->curlSetOption($handle, CURLOPT_RETURNTRANSFER, TRUE);
+        $response = $this->networkAdapter->curlExec($handle);
+        $httpCode = $this->networkAdapter->curlGetInfo($handle, CURLINFO_HTTP_CODE);
+        $this->networkAdapter->curlClose($handle);
+
+        return $httpCode !== 404 && $response;
     }
 }
