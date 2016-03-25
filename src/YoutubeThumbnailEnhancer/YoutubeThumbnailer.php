@@ -133,33 +133,10 @@ class YoutubeThumbnailer
             $image = $this->convertImageToHighQuality($image);
         }
         $playIcon = $this->createPlayImage();
-
-        $logoWidth = $this->imageAdapter->getImageWidth($playIcon);
-        $logoHeight = $this->imageAdapter->getImageHeight($playIcon);
-
-        // CENTER PLAY ICON
-        $left = round($this->imageAdapter->getImageWidth($image) / 2) - round($logoWidth / 2);
-        $top = round($this->imageAdapter->getImageHeight($image) / 2) - round($logoHeight / 2);
-
-
-        // CONVERT TO PNG SO WE CAN GET THAT PLAY BUTTON ON THERE
-        $this->imageAdapter->copyPartOfImage($image, $playIcon, $left, $top, 0, 0, $logoWidth, $logoHeight);
-        $this->imageAdapter->imagePng($image, $this->getFileName() . self::PNG_EXTENSION, 9);
-
-
-        // MASHUP FINAL IMAGE AS A JPEG
-        $input = $this->imageAdapter->createImageFromPngPath($this->getFileName() . self::PNG_EXTENSION);
-        $output = $this->imageAdapter->createTrueColorImage($this->imageAdapter->getImageWidth($image), $this->imageAdapter->getImageHeight($image));
-        $white = $this->imageAdapter->imageColorAllocate($output, 255, 255, 255);
-        $this->imageAdapter->imageFilledRectangle($output, 0, 0, $this->imageAdapter->getImageWidth($image), $this->imageAdapter->getImageHeight($image), $white);
-        $this->imageAdapter->copyPartOfImage($output, $input, 0, 0, 0, 0, $this->imageAdapter->getImageWidth($image), $this->imageAdapter->getImageHeight($image));
+        $finalImage = $this->createFinalImage($image, $playIcon);
 
         // OUTPUT TO 'i' FOLDER
-        $this->imageAdapter->imageJpeg($output, self::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION, 95);
-
-        // UNLINK PNG VERSION
-        $this->fileAdapter->removeFile($this->getFileName() . self::PNG_EXTENSION);
-
+        $this->imageAdapter->imageJpeg($finalImage, self::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION, 95);
 
         $this->returnResponse('Location: ' . self::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION);
     }
@@ -212,5 +189,33 @@ class YoutubeThumbnailer
         $this->imageAdapter->setBlendingMode($playImage, true);
 
         return $playImage;
+    }
+
+    private function createFinalImage($image, $playIcon)
+    {
+        $logoWidth = $this->imageAdapter->getImageWidth($playIcon);
+        $logoHeight = $this->imageAdapter->getImageHeight($playIcon);
+
+        // CENTER PLAY ICON
+        $left = round($this->imageAdapter->getImageWidth($image) / 2) - round($logoWidth / 2);
+        $top = round($this->imageAdapter->getImageHeight($image) / 2) - round($logoHeight / 2);
+
+
+        // CONVERT TO PNG SO WE CAN GET THAT PLAY BUTTON ON THERE
+        $this->imageAdapter->copyPartOfImage($image, $playIcon, $left, $top, 0, 0, $logoWidth, $logoHeight);
+        $this->imageAdapter->imagePng($image, $this->getFileName() . self::PNG_EXTENSION, 9);
+
+
+        // MASHUP FINAL IMAGE AS A JPEG
+        $input = $this->imageAdapter->createImageFromPngPath($this->getFileName() . self::PNG_EXTENSION);
+        $output = $this->imageAdapter->createTrueColorImage($this->imageAdapter->getImageWidth($image), $this->imageAdapter->getImageHeight($image));
+        $white = $this->imageAdapter->imageColorAllocate($output, 255, 255, 255);
+        $this->imageAdapter->imageFilledRectangle($output, 0, 0, $this->imageAdapter->getImageWidth($image), $this->imageAdapter->getImageHeight($image), $white);
+        $this->imageAdapter->copyPartOfImage($output, $input, 0, 0, 0, 0, $this->imageAdapter->getImageWidth($image), $this->imageAdapter->getImageHeight($image));
+
+        $this->fileAdapter->removeFile($this->getFileName() . self::PNG_EXTENSION);
+
+
+        return $output;
     }
 }
