@@ -116,10 +116,10 @@ class YoutubeThumbnailer
             $this->returnResponse('Status: 404 Not Found', 'YouTube ID not found');
         }
 
-        if ($this->fileAdapter->fileExists(YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION)
-            && !$this->getRefresh()
-        ) {
-            $this->returnResponse('Location: ' . YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION);
+        if (!$this->getRefresh() && $this->availableInCache()) {
+            $this->returnResponse(
+                'Location: ' . YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION
+            );
         }
 
 
@@ -197,5 +197,12 @@ class YoutubeThumbnailer
     {
         header($header);
         die($message);
+    }
+
+    private function availableInCache()
+    {
+        return $this->fileAdapter->fileExists(
+            YoutubeThumbnailer::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION
+        );
     }
 }
