@@ -132,17 +132,10 @@ class YoutubeThumbnailer
         if (self::HIGH_QUALITY === $this->getQuality()) {
             $image = $this->convertImageToHighQuality($image);
         }
+        $playIcon = $this->createPlayImage();
 
-
-        // ADD THE PLAY ICON
-        $play_icon = $this->getPlay() ? "play-" : "noplay-";
-        $play_icon .= $this->getQuality() . self::PNG_EXTENSION;
-        $logoImage = $this->imageAdapter->createImageFromPngPath(self::IMAGE_UTILS_DIR . $play_icon);
-
-        $this->imageAdapter->setBlendingMode($logoImage, true);
-
-        $logoWidth = $this->imageAdapter->getImageWidth($logoImage);
-        $logoHeight = $this->imageAdapter->getImageHeight($logoImage);
+        $logoWidth = $this->imageAdapter->getImageWidth($playIcon);
+        $logoHeight = $this->imageAdapter->getImageHeight($playIcon);
 
         // CENTER PLAY ICON
         $left = round($this->imageAdapter->getImageWidth($image) / 2) - round($logoWidth / 2);
@@ -150,7 +143,7 @@ class YoutubeThumbnailer
 
 
         // CONVERT TO PNG SO WE CAN GET THAT PLAY BUTTON ON THERE
-        $this->imageAdapter->copyPartOfImage($image, $logoImage, $left, $top, 0, 0, $logoWidth, $logoHeight);
+        $this->imageAdapter->copyPartOfImage($image, $playIcon, $left, $top, 0, 0, $logoWidth, $logoHeight);
         $this->imageAdapter->imagePng($image, $this->getFileName() . self::PNG_EXTENSION, 9);
 
 
@@ -167,7 +160,7 @@ class YoutubeThumbnailer
         // UNLINK PNG VERSION
         $this->fileAdapter->removeFile($this->getFileName() . self::PNG_EXTENSION);
 
-        // REDIRECT TO NEW IMAGE
+
         $this->returnResponse('Location: ' . self::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION);
     }
 
@@ -209,5 +202,15 @@ class YoutubeThumbnailer
         $this->imageAdapter->copyPartOfImage($canvas, $image, 0, 0, $cleft, $ctop, 480, 360);
 
         return $canvas;
+    }
+
+    private function createPlayImage()
+    {
+        $playIconPath = $this->getPlay() ? 'play-' : 'noplay-';
+        $playIconPath .= $this->getQuality() . self::PNG_EXTENSION;
+        $playImage = $this->imageAdapter->createImageFromPngPath(self::IMAGE_UTILS_DIR . $playIconPath);
+        $this->imageAdapter->setBlendingMode($playImage, true);
+
+        return $playImage;
     }
 }
