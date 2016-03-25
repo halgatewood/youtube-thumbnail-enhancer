@@ -134,10 +134,7 @@ class YoutubeThumbnailer
         }
         $playIcon = $this->createPlayImage();
         $finalImage = $this->createFinalImage($image, $playIcon);
-
-        // OUTPUT TO 'i' FOLDER
-        $this->imageAdapter->imageJpeg($finalImage, self::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION, 95);
-
+        $this->saveThubnailToDisk($finalImage);
         $this->returnResponse('Location: ' . self::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION);
     }
 
@@ -217,5 +214,14 @@ class YoutubeThumbnailer
 
 
         return $output;
+    }
+
+    private function saveThubnailToDisk($image)
+    {
+        $this->imageAdapter->imageJpeg(
+            $image,
+            self::THUMBNAILS_DIRECTORY . $this->getFileName() . self::JPG_EXTENSION,
+            95
+        );
     }
 }
