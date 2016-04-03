@@ -1,8 +1,8 @@
 <?php
 
-namespace YoutubeThumbnailEnhancer;
+require_once __DIR__.'/../vendor/autoload.php';
 
-require __DIR__ . '/../../vendor/autoload.php';
+use YoutubeThumbnailEnhancer\YoutubeThumbnailer;
 
 $youtbeThumbnailer = new YoutubeThumbnailer();
 $youtbeThumbnailer->setRequestParams($_REQUEST);

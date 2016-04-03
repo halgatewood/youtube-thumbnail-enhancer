@@ -3,7 +3,7 @@
 
     <testsuites>
         <testsuite name="Youtube thumbnail enhancer Test Suite">
-            <directory>src/YoutubeThumbnailEnhancer/Test</directory>
+            <directory>test</directory>
         </testsuite>
     </testsuites>
 </phpunit>

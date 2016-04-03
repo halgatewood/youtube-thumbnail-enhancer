@@ -2,8 +2,6 @@
 
 namespace YoutubeThumbnailEnhancer;
 
-require __DIR__ . '/../../vendor/autoload.php';
-
 class ImageAdapter
 {
     public function getImageWidth($image)

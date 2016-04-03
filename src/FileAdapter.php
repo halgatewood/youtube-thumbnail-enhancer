@@ -2,8 +2,6 @@
 
 namespace YoutubeThumbnailEnhancer;
 
-require __DIR__ . '/../../vendor/autoload.php';
-
 class FileAdapter
 {
     public function fileExists($filename)

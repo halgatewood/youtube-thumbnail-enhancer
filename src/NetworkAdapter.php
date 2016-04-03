@@ -2,8 +2,6 @@
 
 namespace YoutubeThumbnailEnhancer;
 
-require __DIR__ . '/../../vendor/autoload.php';
-
 class NetworkAdapter
 {
     public function curlInit($url = null)
